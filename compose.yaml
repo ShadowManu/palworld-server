@@ -1,0 +1,41 @@
+name: palworld
+services:
+  palworld:
+    image: thijsvanloef/palworld-server-docker
+    restart: unless-stopped
+    ports:
+      - 8211:8211/udp
+      - 27015:27015/udp
+    environment:
+      # Technical
+      - PORT=8211
+      - PUID=1000
+      - PGID=1000
+      - PLAYERS=6
+      - MULTITHREADING=true
+      - COMMUNITY=false
+
+      - SERVER_NAME="ShadowManu"
+
+      # Backups
+      - BACKUP_ENABLED=true
+      - BACKUP_CRON_EXPRESSION=*/20 * * * *
+
+      # Difficulty
+      - DEATH_PENALTY=None
+      - PAL_EGG_DEFAULT_HATCHING_TIME=2.000000
+    env_file: ./src/.env.passwords
+    volumes:
+      # Data
+      - ./data:/palworld/
+      # Config
+      - ./src/GameUserSettings.ini:/palworld/Pal/Saved/Config/LinuxServer/GameUserSettings.ini
+      # Save
+      - ./save:/palworld/Pal/Saved/SaveGames/0/993C19838DFD4E0AAED697C6D2F98E78
+  backups:
+    build:
+      context: ./src
+      dockerfile: dockerfile.backups
+    volumes:
+      - ./save:/source:ro
+      - ./backups:/destination
