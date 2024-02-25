@@ -21,6 +21,9 @@ services:
       - BACKUP_ENABLED=true
       - BACKUP_CRON_EXPRESSION=*/20 * * * *
 
+      # Updates
+      - AUTO_UPDATE_ENABLED=true
+
       # Difficulty
       - DEATH_PENALTY=None
       - PAL_EGG_DEFAULT_HATCHING_TIME=2.000000
